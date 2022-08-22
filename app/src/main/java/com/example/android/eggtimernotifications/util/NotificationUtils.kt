@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.example.android.eggtimernotifications.MainActivity
 import com.example.android.eggtimernotifications.R
 import com.example.android.eggtimernotifications.receiver.SnoozeReceiver
@@ -41,10 +42,25 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
     // Create the content intent for the notification, which launches
     // this activity
     // TODO: Step 1.11 create intent
+    val intent = Intent(applicationContext, MainActivity::class.java)
 
     // TODO: Step 1.12 create PendingIntent
+    val pendingIntent = PendingIntent.getActivity(
+        applicationContext,
+        NOTIFICATION_ID,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
     // TODO: Step 2.0 add style
+    val eggImage = BitmapFactory.decodeResource(
+        applicationContext.resources,
+        R.drawable.cooked_egg
+    )
+
+    val bigPicStyle = NotificationCompat.BigPictureStyle()
+        .bigPicture(eggImage)
+        .bigLargeIcon(null)
 
     // TODO: Step 2.2 add snooze action
 
@@ -55,9 +71,16 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         applicationContext.getString(R.string.egg_notification_channel_id)
     )
 
-    // TODO: Step 1.8 use the new 'breakfast' notification channel
+        // TODO: Step 1.8 use the new 'breakfast' notification channel
 
-    // TODO: Step 1.3 set title, text and icon to builder
+        // TODO: Step 1.3 set title, text and icon to builder
+        .setContentTitle(applicationContext.getString(R.string.notification_title))
+        .setSmallIcon(R.drawable.egg_icon)
+        .setContentText(messageBody)
+        .setStyle(bigPicStyle)
+        .setLargeIcon(eggImage)
+        .setContentIntent(pendingIntent)
+        .setAutoCancel(true)
 
     // TODO: Step 1.13 set content intent
 
@@ -68,7 +91,11 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
     // TODO: Step 2.5 set priority
 
     // TODO: Step 1.4 call notify
+    notify(NOTIFICATION_ID, builder.build())
 
 }
 
 // TODO: Step 1.14 Cancel all notifications
+fun NotificationManager.cancelNotifications() {
+    cancelAll()
+}
