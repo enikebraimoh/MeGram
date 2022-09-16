@@ -16,8 +16,11 @@
 
 package com.example.android.eggtimernotifications
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.android.eggtimernotifications.receiver.FCMReceiver
 import com.example.android.eggtimernotifications.ui.EggTimerFragment
 
 class MainActivity : AppCompatActivity() {
@@ -31,5 +34,10 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, EggTimerFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerReceiver(FCMReceiver(), IntentFilter(Intent.ACTION_ANSWER));
     }
 }
